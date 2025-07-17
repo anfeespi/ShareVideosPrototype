@@ -1,0 +1,7 @@
+fastapi[all]~=0.116.1
+uvicorn
+pillow~=11.3.0
+motor[fastapi]~=3.7.1
+pymongo~=4.13.2
+pydantic~=2.11.7
+pydantic_core~=2.33.2
