@@ -24,7 +24,7 @@ async def create_video_route(
         video_service: VideoService = Depends(get_video_service)
 ):
     """
-    Este endpoint permite registrar un nuevo video en la base de datos con sus metadatos.
+    Este endpoint permite registrar un nuevo video.
     """
     try:
         print(video_data)
@@ -36,7 +36,7 @@ async def create_video_route(
 
 @router.get("/",
             summary="Listar todos los videos",
-            response_description="Lista de metadatos de los videos.",
+            response_description="Lista de los videos.",
             response_model=List[VideoInDB]
             )
 async def get_all_videos_route(
@@ -56,21 +56,19 @@ async def get_all_videos_route(
             response_model=VideoInDB
             )
 async def get_video_by_uuid_route(
-        video_uuid: UUID,  # FastAPI convierte automáticamente el string de la URL a UUID
+        video_uuid: UUID,
         video_service: VideoService = Depends(get_video_service)
 ):
     """
-    Este endpoint retorna los metadatos de un video específico usando su UUID.
+    Este endpoint retorna los datos de un video específico usando su UUID.
     Incrementa el contador de vistas cada vez que se accede.
     """
     video = await video_service.get_video_by_uuid(video_uuid)
     if not video:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Video no encontrado.")
 
-    # Incrementar vistas
     updated_video = await video_service.increment_views(video_uuid)
     if not updated_video:
-        # Esto podría ocurrir si el video es eliminado entre la búsqueda y la actualización
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Error al incrementar vistas.")
 
     return updated_video
@@ -87,7 +85,7 @@ async def update_video_route(
         video_service: VideoService = Depends(get_video_service)
 ):
     """
-    Este endpoint permite actualizar parcialmente los metadatos de un video usando su UUID.
+    Este endpoint permite actualizar datos de un video usando su UUID.
     """
     updated_video = await video_service.update_video(video_uuid, video_data)
     if not updated_video:

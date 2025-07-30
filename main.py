@@ -12,7 +12,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title="Prototipo de funcionalidad para compartir videos",
     description="Una API de prueba para la función de compartir videos por medio de imágenes",
-    version="0.0.1",
+    version="0.125 pre alpha",
     docs_url="/docs",
     redoc_url="/redoc",
     lifespan=lifespan
@@ -20,7 +20,7 @@ app = FastAPI(
 
 app.include_router(video_routes.router, prefix="/api/v1/videos", tags=["Videos"])
 
-app.include_router(image_routes.router, prefix="/api/v1/steganography", tags=["Images"])
+app.include_router(image_routes.router, prefix="/api/v1/share", tags=["Share"])
 
 @app.get("/")
 async def root():
