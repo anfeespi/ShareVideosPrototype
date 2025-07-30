@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from config.database import mongo_connect, mongo_disconnect
-from routes import video_routes, image_routes
+from routes import video_routes, multimedia_routes
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -11,7 +11,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
     title="Prototipo de funcionalidad para compartir videos",
-    description="Una API de prueba para la función de compartir videos por medio de imágenes",
+    description="Una API de prueba para la función de compartir videos por medio de multimedia",
     version="0.125 pre alpha",
     docs_url="/docs",
     redoc_url="/redoc",
@@ -20,7 +20,7 @@ app = FastAPI(
 
 app.include_router(video_routes.router, prefix="/api/v1/videos", tags=["Videos"])
 
-app.include_router(image_routes.router, prefix="/api/v1/share", tags=["Share"])
+app.include_router(multimedia_routes.router, prefix="/api/v1/share", tags=["Share"])
 
 @app.get("/")
 async def root():
