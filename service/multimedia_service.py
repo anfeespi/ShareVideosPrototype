@@ -2,8 +2,9 @@ import io
 from uuid import UUID
 
 import imageio
+import numpy as np
 from moviepy import VideoFileClip, ImageSequenceClip
-
+from PIL import Image
 from util.steganography import hide_message_image, hide_message_in_frames, reveal_message_image, \
     reveal_message_from_frames
 import re
@@ -25,16 +26,26 @@ class ImageSteganographyService:
             if filename.lower().endswith(('.png', '.jpg', '.jpeg')):
                 return hide_message_image(file_bytes, message)
             elif filename.lower().endswith('.gif'):
-                # Lógica para GIF
-                gif_reader = imageio.get_reader(io.BytesIO(file_bytes))
-                frames = [frame for frame in gif_reader]
+                gif_image = Image.open(io.BytesIO(file_bytes))
+                frames = []
+
+                durations = []
+                for frame in range(0, gif_image.n_frames):
+                    gif_image.seek(frame)
+
+                    rgb_frame = gif_image.convert('RGB')
+                    frames.append(np.array(rgb_frame))
+                    durations.append(gif_image.info.get('duration', 100))
+
                 new_frames = hide_message_in_frames(frames, message)
 
                 output_buffer = io.BytesIO()
-                imageio.mimsave(output_buffer, new_frames, format='GIF')
+                imageio.mimsave(output_buffer, new_frames, format='GIF', duration=durations)
                 output_buffer.seek(0)
+                gif_image.close()
                 return output_buffer.getvalue()
             elif filename.lower().endswith(('.mp4', '.avi', '.mov')):
+                ##TODO: RETURN THE VIDEO IN THE RESPONSE AND IMPROVE THE PERFORMANCE (The swagger is down at the moment it get the response of the endpoint but only with the video)
                 with open("temp_input_video", "wb") as f:
                     f.write(file_bytes)
                 clip = VideoFileClip("temp_input_video")

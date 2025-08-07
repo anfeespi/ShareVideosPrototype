@@ -116,7 +116,7 @@ def reveal_message_from_frames(frames: list) -> str:
         for y in range(height):
             for x in range(width):
                 r, g, b = frame[y, x]
-                for channel_val in [r, g, b]:
+                for channel_val in [int(r), int(g), int(b)]:
                     binary_message += to_bin(channel_val)[-1]
                     if len(binary_message) >= 16 and binary_message[-16:] == '1111111111111110':
                         found_delimiter = True
