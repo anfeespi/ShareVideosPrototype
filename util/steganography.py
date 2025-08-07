@@ -98,17 +98,11 @@ def hide_message_in_frames(frames: list, message: str) -> list:
                     break
                 r, g, b = frame_copy[y, x]
                 for i in range(3):
-                    #TODO ESTA ACA PERO NO SE XDDDD
                     if data_index < len(binary_message):
-                        bit = int(binary_message[data_index])
-                        if i == 0:
-                            frame_copy[y, x, 0] = (r & ~1) | bit
-                        elif i == 1:
-                            frame_copy[y, x, 1] = (g & ~1) | bit
-                        else:
-                            frame_copy[y, x, 2] = (b & ~1) | bit
+                        current_bit = int(binary_message[data_index])
+                        frame_copy[y, x, i] = (frame_copy[y, x, i] & 0xFE) | current_bit
+
                         data_index += 1
-                    print("BP4")
             if data_index >= len(binary_message):
                 break
         new_frames.append(frame_copy)

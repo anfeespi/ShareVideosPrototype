@@ -41,17 +41,12 @@ class ImageSteganographyService:
                 frames = list(clip.iter_frames())
 
                 new_frames = hide_message_in_frames(frames, message)
-
                 new_clip = ImageSequenceClip(new_frames, fps=clip.fps)
                 output_buffer = io.BytesIO()
                 new_clip.write_videofile("temp_output_video.mp4", codec="libx264", audio_codec="aac")
-
                 with open("temp_output_video.mp4", "rb") as f:
                     output_bytes = f.read()
-                import os
-                os.remove("temp_input_video")
-                os.remove("temp_output_video.mp4")
-
+                print("si")
                 return output_bytes
             else:
                 raise HTTPException(status_code=400, detail="Formato de archivo no soportado.")
